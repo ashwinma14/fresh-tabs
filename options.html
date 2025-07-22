@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Tabs - Settings</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1 class="page-title">Fresh Tabs Settings</h1>
+            <p class="page-description">Configure when and how your tabs are archived</p>
+        </header>
+
+        <main class="settings-content">
+            <form id="settingsForm" class="settings-form">
+                <!-- Daily Cleanup Enable/Disable Setting -->
+                <div class="setting-group">
+                    <label for="dailyCleanupEnabled" class="setting-label setting-label-checkbox">
+                        <div class="checkbox-container">
+                            <input 
+                                type="checkbox" 
+                                id="dailyCleanupEnabled" 
+                                name="dailyCleanupEnabled"
+                                class="setting-checkbox"
+                            >
+                            <span class="checkbox-custom"></span>
+                        </div>
+                        <div class="setting-content">
+                            <span class="setting-icon">📅</span>
+                            <span class="setting-title">Enable daily scheduled cleanup</span>
+                        </div>
+                    </label>
+                    <div class="setting-description">Automatically archive tabs at the scheduled time each day</div>
+                </div>
+
+                <!-- Archive Time Setting -->
+                <div class="setting-group" id="archiveTimeGroup">
+                    <label for="archiveTime" class="setting-label">
+                        <span class="setting-icon">🕒</span>
+                        <span class="setting-title">Archive Time</span>
+                    </label>
+                    <input 
+                        type="time" 
+                        id="archiveTime" 
+                        name="archiveTime"
+                        class="setting-input setting-input-time"
+                    >
+                    <div class="setting-description">When should tabs be archived daily?</div>
+                    <div id="nextArchivePreview" class="next-archive-preview"></div>
+                </div>
+
+                <!-- Notification Setting -->
+                <div class="setting-group">
+                    <label for="notificationsEnabled" class="setting-label setting-label-checkbox">
+                        <div class="checkbox-container">
+                            <input 
+                                type="checkbox" 
+                                id="notificationsEnabled" 
+                                name="notificationsEnabled"
+                                class="setting-checkbox"
+                            >
+                            <span class="checkbox-custom"></span>
+                        </div>
+                        <div class="setting-content">
+                            <span class="setting-icon">🔔</span>
+                            <span class="setting-title">Enable Notifications</span>
+                        </div>
+                    </label>
+                    <div class="setting-description">Show notification when tabs are archived</div>
+                </div>
+
+                <!-- History Retention Setting -->
+                <div class="setting-group">
+                    <label for="retentionDays" class="setting-label">
+                        <span class="setting-icon">📆</span>
+                        <span class="setting-title">History Retention</span>
+                    </label>
+                    <div class="input-with-suffix">
+                        <input 
+                            type="number" 
+                            id="retentionDays" 
+                            name="retentionDays"
+                            min="1"
+                            max="365"
+                            class="setting-input setting-input-number"
+                        >
+                        <span class="input-suffix">days</span>
+                    </div>
+                    <div class="setting-description">How many days of archived tabs to keep?</div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="save-button">Save Settings</button>
+                    <button type="button" id="resetButton" class="reset-button">Reset to Defaults</button>
+                </div>
+            </form>
+
+            <!-- Status Message -->
+            <div id="statusMessage" class="status-message"></div>
+        </main>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>

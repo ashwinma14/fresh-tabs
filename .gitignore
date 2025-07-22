@@ -1,0 +1,54 @@
+# macOS System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Development Files
+*.log
+*.tmp
+*.temp
+*~
+.vscode/
+.idea/
+
+# Test and Debug Files
+*_test.*
+*_debug.*
+*_minimal.*
+*_clean.*
+test_*
+debug_*
+temp_*
+simple_test.*
+
+# Node.js (if used in future)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Chrome Extension Development
+*.crx
+*.pem
+key.pem
+
+# Personal/Local Files
+CLAUDE.md
+generate_icons.py
+personal/
+dev/
+scripts/
+
+# Backup Files
+*.bak
+*.backup
+*_backup
+
+# OS Generated Files
+Icon?
+.AppleDouble
+.LSOverride

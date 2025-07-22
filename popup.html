@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archived Tabs</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">Fresh Tabs</h1>
+        <div class="search-container">
+            <input 
+                type="text" 
+                id="searchInput" 
+                class="search-input"
+                placeholder="Search tabs by title or date..."
+                autocomplete="off"
+            >
+        </div>
+        <div class="actions-container">
+            <div class="button-row">
+                <button 
+                    id="settingsBtn" 
+                    class="settings-button"
+                    type="button"
+                    title="Open Settings"
+                >
+                    ⚙️
+                </button>
+                <button 
+                    id="manualCleanupBtn" 
+                    class="cleanup-button"
+                    type="button"
+                >
+                    Archive & Refresh Now
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="content" class="content"></div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
