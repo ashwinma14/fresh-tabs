@@ -43,7 +43,7 @@ You can adjust settings in the extension's options page:
 ⸻
 
 📦 Folder Structure
-fresh-tabs-extension/
+```fresh-tabs-extension/
 ├── background.js
 ├── manifest.json
 ├── options.html
@@ -58,7 +58,7 @@ fresh-tabs-extension/
 │  ├── icon48.png
 │  └── icon128.png
 ├── .gitignore
-├── README.md
+├── README.md ```
 
 ⸻
 
