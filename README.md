@@ -32,9 +32,10 @@ You can adjust settings in the extension's options page:
 
 ## 🚀 Installation
 ### From Source
-1\. Clone this repository:
- ```bash
- git clone <repo-url>```
+1. Clone this repository:
+```bash
+   git clone <repo-url>
+   ```
 2.  Open Chrome and navigate to chrome://extensions/
 3.  Enable Developer Mode (top right)
 4.  Click Load unpacked and select the project folder
