@@ -34,7 +34,7 @@ You can adjust settings in the extension's options page:
 ### From Source
 1\. Clone this repository:
  ```bash
- git clone <repo-url>
+ git clone <repo-url>```
 2.  Open Chrome and navigate to chrome://extensions/
 3.  Enable Developer Mode (top right)
 4.  Click Load unpacked and select the project folder
