@@ -5,11 +5,11 @@
 ---
 
 ## ✨ Features
-✅ Automatically archives & closes unpinned tabs daily at your chosen time  
-✅ Warm, dynamic notification & badge showing archived tab count  
-✅ Manual "Archive & Refresh Now" button in the popup  
-✅ Preserves pinned tabs --- they remain open  
-✅ Search & view archived tabs by date & title  
+✅ Automatically archives & closes unpinned tabs daily at your chosen time  
+✅ Warm, dynamic notification & badge showing archived tab count  
+✅ Manual "Archive & Refresh Now" button in the popup  
+✅ Preserves pinned tabs — they remain open  
+✅ Search & view archived tabs by date & title  
 ✅ Settings page to customize archive time, enable/disable daily scheduling, enable/disable notifications, and retention period
 
 ---
@@ -40,9 +40,9 @@ You can adjust settings in the extension's options page:
 3.  Enable Developer Mode (top right)
 4.  Click Load unpacked and select the project folder
 
-⸻
+---
 
-📦 Folder Structure
+## 📂 Folder Structure
 
 ```text
 morning-tab-cleaner/
@@ -63,12 +63,12 @@ morning-tab-cleaner/
 └── README.md
 ```
 
-⸻
+---
 
-📝 License
+## 📝 License
 MIT
 
-⸻
+---
 
-👏 Contributing
+## 👏 Contributing
 Pull requests welcome! Please open an issue to discuss changes or improvements first.
