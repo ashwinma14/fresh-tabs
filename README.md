@@ -43,8 +43,10 @@ You can adjust settings in the extension's options page:
 ⸻
 
 📦 Folder Structure
-```fresh-tabs-extension/
-├── background.js
+
+```text
+morning-tab-cleaner/
+├── background_complete.js
 ├── manifest.json
 ├── options.html
 ├── options.js
@@ -53,12 +55,13 @@ You can adjust settings in the extension's options page:
 ├── popup.js
 ├── popup.css
 ├── icons/
-│  ├── icon16.png
-│  ├── icon32.png
-│  ├── icon48.png
-│  └── icon128.png
+│   ├── icon16.png
+│   ├── icon32.png
+│   ├── icon48.png
+│   └── icon128.png
 ├── .gitignore
-├── README.md ```
+└── README.md
+```
 
 ⸻
 
