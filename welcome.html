@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Tab Cleaner - Welcome</title>
+    <link rel="stylesheet" href="welcome.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Settings Icon -->
+        <div class="settings-icon" onclick="openSettings()" tabindex="0" role="button" aria-label="Settings">
+            ⚙️
+            <span class="tooltip">Settings</span>
+        </div>
+        
+        <!-- Header Section -->
+        <header class="header">
+            <h1 class="greeting">Good Morning, your tabs have been refreshed.</h1>
+            <div class="badge-container">
+                <div class="badge archived">
+                    <span class="badge-number" id="archivedCount">0</span>
+                    <span class="badge-label">Archived</span>
+                </div>
+                <div class="badge remaining">
+                    <span class="badge-number" id="remainingCount">0</span>
+                    <span class="badge-label">Remaining</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Archived Tabs Section -->
+            <section class="archived-section">
+                <h2 class="section-title">Archived Tabs</h2>
+                <div class="tab-list" id="archivedTabsList">
+                    <!-- Tabs will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Focus Section -->
+            <section class="focus-section">
+                <h2 class="section-title">Today I want to focus on...</h2>
+                <input type="text" id="focusInput" class="focus-input" placeholder="Enter your main goal for today" />
+            </section>
+
+            <!-- Quick Links Section -->
+            <section class="quick-links-section">
+                <h2 class="section-title">Quick Links</h2>
+                <div class="quick-links">
+                    <button class="quick-link-btn calendar" onclick="openLink('calendar')">
+                        <span class="btn-icon">📅</span>
+                        <span class="btn-text">Calendar</span>
+                    </button>
+                    <button class="quick-link-btn todoist" onclick="openLink('todoist')">
+                        <span class="btn-icon">✓</span>
+                        <span class="btn-text">Todoist</span>
+                    </button>
+                    <button class="quick-link-btn settings" onclick="openLink('settings')">
+                        <span class="btn-icon">⚙️</span>
+                        <span class="btn-text">Settings</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Quote Section -->
+        <section class="quote-section">
+            <blockquote id="quoteText">Loading inspiration...</blockquote>
+            <cite id="quoteAuthor"></cite>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="quote" id="inspirationalQuote">
+                "The way to get started is to quit talking and begin doing." - Walt Disney
+            </p>
+        </footer>
+    </div>
+
+    <script src="welcome.js"></script>
+</body>
+</html>

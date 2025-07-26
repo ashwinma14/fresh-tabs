@@ -5,12 +5,18 @@
 ---
 
 ## ✨ Features
+## ✨ Features  
 ✅ Automatically archives & closes unpinned tabs daily at your chosen time  
-✅ Warm, dynamic notification & badge showing archived tab count  
+✅ Opens a beautiful **Welcome Tab** each morning with:  
+- Warm greeting and archive summary  
+- Scrollable list of archived tabs  
+- Optional “Today’s Focus” input  
+- Rotating inspirational quote  
+- Accessible Settings icon  
 ✅ Manual "Archive & Refresh Now" button in the popup  
 ✅ Preserves pinned tabs — they remain open  
 ✅ Search & view archived tabs by date & title  
-✅ Settings page to customize archive time, enable/disable daily scheduling, enable/disable notifications, and retention period
+✅ Settings page to customize archive time, enable/disable daily scheduling, notifications, and retention period  
 
 ---
 

@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   
   if (message.action === 'manualCleanup') {
     console.log('🧹 Manual cleanup requested');
-    cleanupTabs(true).then(() => {
+    cleanupTabs(true, 'manual').then(() => {
       console.log('✅ Manual cleanup completed');
       sendResponse({ success: true });
     }).catch((error) => {
@@ -64,10 +64,15 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 // Handle alarm triggers
-chrome.alarms.onAlarm.addListener((alarm) => {
+chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === 'morningCleanup') {
     console.log('Morning cleanup alarm triggered');
-    cleanupTabs();
+    
+    // Check if we should open the welcome tab
+    await checkAndOpenWelcomeTab();
+    
+    // Perform the scheduled cleanup
+    cleanupTabs(false, 'scheduled');
   }
 });
 
@@ -132,9 +137,41 @@ async function scheduleNextCleanup(archiveTime) {
 }
 
 /**
+ * Check if we should open the welcome tab today
+ */
+async function checkAndOpenWelcomeTab() {
+  try {
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    
+    // Check if we already opened the welcome tab today
+    const result = await chrome.storage.local.get(['lastWelcomeDate']);
+    const lastWelcomeDate = result.lastWelcomeDate;
+    
+    if (lastWelcomeDate === today) {
+      console.log('Welcome tab already opened today, skipping');
+      return;
+    }
+    
+    // Open the welcome tab
+    console.log('Opening welcome tab for first cleanup of the day');
+    await chrome.tabs.create({ 
+      url: chrome.runtime.getURL('welcome.html'),
+      active: true 
+    });
+    
+    // Save today's date
+    await chrome.storage.local.set({ lastWelcomeDate: today });
+    console.log(`Welcome tab opened and date saved: ${today}`);
+    
+  } catch (error) {
+    console.error('Error checking/opening welcome tab:', error);
+  }
+}
+
+/**
  * Main cleanup function - archives and closes unpinned tabs
  */
-async function cleanupTabs(isManual = false) {
+async function cleanupTabs(isManual = false, source = 'manual') {
   try {
     console.log(`Starting ${isManual ? 'manual' : 'scheduled'} tab cleanup...`);
     
@@ -165,7 +202,13 @@ async function cleanupTabs(isManual = false) {
     
     // Save to storage
     await chrome.storage.local.set({
-      [today]: tabData
+      [today]: tabData,
+      archivedTabs: tabData,
+      remainingTabs: pinnedTabs.map(tab => ({
+        url: tab.url,
+        title: tab.title,
+        timestamp: new Date().toISOString()
+      }))
     });
     
     console.log(`Archived ${unpinnedTabs.length} unpinned tabs`);

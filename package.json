@@ -1,0 +1,31 @@
+{
+  "name": "morning-tab-cleaner",
+  "version": "1.0.0",
+  "description": "**Fresh Tabs** helps you start every day with a clean browser. Each morning, Fresh Tabs automatically archives and closes your unpinned tabs, giving you a fresh, clutter‑free start. You can also manually archive tabs anytime with a single click.",
+  "main": "background_complete.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashwinma14/fresh-tabs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ashwinma14/fresh-tabs/issues"
+  },
+  "homepage": "https://github.com/ashwinma14/fresh-tabs#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.54.1",
+    "@types/node": "^24.1.0",
+    "playwright": "^1.54.1",
+    "typescript": "^5.8.3"
+  }
+}
