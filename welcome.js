@@ -10,7 +10,6 @@ function initializeWelcomeScreen() {
     setupFocusAutoSave();
     loadDailyQuote();
     setupSettingsKeyboardAccess();
-    setRandomQuote(); // Keep the old footer quote for now
 }
 
 // Load and display tab data from storage
@@ -58,8 +57,8 @@ function displayArchivedTabs(tabs) {
         return `
             <div class="tab-item">
                 <div class="tab-favicon">
-                    <img src="${faviconUrl}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                    <span class="favicon-fallback" style="display:none;">🌐</span>
+                    <img src="${faviconUrl}" alt="" class="favicon-img">
+                    <span class="favicon-fallback">🌐</span>
                 </div>
                 <div class="tab-content">
                     <a href="${safeUrl}" target="_blank" class="tab-title" title="${safeTitle}">
@@ -72,6 +71,15 @@ function displayArchivedTabs(tabs) {
     }).join('');
     
     tabsList.innerHTML = totalCountHtml + tabsHtml;
+    
+    // Add error handling for favicon images
+    const faviconImages = tabsList.querySelectorAll('.favicon-img');
+    faviconImages.forEach(img => {
+        img.addEventListener('error', function() {
+            this.classList.add('hidden');
+            this.nextElementSibling.classList.add('show');
+        });
+    });
 }
 
 // Load daily focus from localStorage
@@ -246,9 +254,13 @@ function displayQuote(quote) {
 
 // Setup keyboard accessibility for settings icon
 function setupSettingsKeyboardAccess() {
-    const settingsIcon = document.querySelector('.settings-icon');
+    const settingsIcon = document.getElementById('settingsIcon');
     if (!settingsIcon) return;
     
+    // Handle click events
+    settingsIcon.addEventListener('click', openSettings);
+    
+    // Handle keyboard events
     settingsIcon.addEventListener('keydown', function(event) {
         // Handle Enter and Space keys
         if (event.key === 'Enter' || event.key === ' ') {
@@ -280,57 +292,6 @@ function openSettings() {
     }
 }
 
-// Handle quick link clicks
-function openLink(linkType) {
-    let url;
-    
-    switch(linkType) {
-        case 'calendar':
-            url = 'https://calendar.google.com';
-            break;
-        case 'todoist':
-            url = 'https://todoist.com/app';
-            break;
-        case 'settings':
-            // Use the dedicated settings function
-            openSettings();
-            return;
-        default:
-            return;
-    }
-    
-    // Open in new tab
-    chrome.tabs.create({ url: url });
-}
-
-// Set a random inspirational quote
-function setRandomQuote() {
-    const quotes = [
-        '"The way to get started is to quit talking and begin doing." - Walt Disney',
-        '"Your limitation—it\'s only your imagination."',
-        '"Great things never come from comfort zones."',
-        '"Dream it. Wish it. Do it."',
-        '"Success doesn\'t just find you. You have to go out and get it."',
-        '"The harder you work for something, the greater you\'ll feel when you achieve it."',
-        '"Don\'t stop when you\'re tired. Stop when you\'re done."',
-        '"Wake up with determination. Go to bed with satisfaction."',
-        '"Do something today that your future self will thank you for."',
-        '"Little things make big days."',
-        '"It\'s going to be hard, but hard does not mean impossible."',
-        '"Don\'t wait for opportunity. Create it."',
-        '"Sometimes we\'re tested not to show our weaknesses, but to discover our strengths."',
-        '"The key to success is to focus on goals, not obstacles."',
-        '"Dream bigger. Do bigger."',
-        '"Focus on the step in front of you, not the whole staircase."',
-        '"You are never too old to set another goal or to dream a new dream." - C.S. Lewis',
-        '"The future depends on what you do today." - Mahatma Gandhi',
-        '"Believe you can and you\'re halfway there." - Theodore Roosevelt',
-        '"It does not matter how slowly you go as long as you do not stop." - Confucius'
-    ];
-    
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    document.getElementById('inspirationalQuote').textContent = randomQuote;
-}
 
 // Utility function to escape HTML
 function escapeHtml(text) {

@@ -8,15 +8,15 @@
 </head>
 <body>
     <div class="container">
-        <!-- Settings Icon -->
-        <div class="settings-icon" onclick="openSettings()" tabindex="0" role="button" aria-label="Settings">
-            ⚙️
-            <span class="tooltip">Settings</span>
-        </div>
-        
         <!-- Header Section -->
         <header class="header">
-            <h1 class="greeting">Good Morning, your tabs have been refreshed.</h1>
+            <div class="header-content">
+                <h1 class="greeting">Good Morning, your tabs have been refreshed.</h1>
+                <div class="settings-icon" tabindex="0" role="button" aria-label="Settings" id="settingsIcon">
+                    ⚙️
+                    <span class="tooltip">Settings</span>
+                </div>
+            </div>
             <div class="badge-container">
                 <div class="badge archived">
                     <span class="badge-number" id="archivedCount">0</span>
@@ -42,25 +42,9 @@
             <!-- Focus Section -->
             <section class="focus-section">
                 <h2 class="section-title">Today I want to focus on...</h2>
-                <input type="text" id="focusInput" class="focus-input" placeholder="Enter your main goal for today" />
-            </section>
-
-            <!-- Quick Links Section -->
-            <section class="quick-links-section">
-                <h2 class="section-title">Quick Links</h2>
-                <div class="quick-links">
-                    <button class="quick-link-btn calendar" onclick="openLink('calendar')">
-                        <span class="btn-icon">📅</span>
-                        <span class="btn-text">Calendar</span>
-                    </button>
-                    <button class="quick-link-btn todoist" onclick="openLink('todoist')">
-                        <span class="btn-icon">✓</span>
-                        <span class="btn-text">Todoist</span>
-                    </button>
-                    <button class="quick-link-btn settings" onclick="openLink('settings')">
-                        <span class="btn-icon">⚙️</span>
-                        <span class="btn-text">Settings</span>
-                    </button>
+                <div class="focus-input-container">
+                    <span class="focus-input-icon">✏️</span>
+                    <input type="text" id="focusInput" class="focus-input" placeholder="e.g., Finish project writeup or Be present with family" />
                 </div>
             </section>
         </main>
@@ -70,13 +54,6 @@
             <blockquote id="quoteText">Loading inspiration...</blockquote>
             <cite id="quoteAuthor"></cite>
         </section>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p class="quote" id="inspirationalQuote">
-                "The way to get started is to quit talking and begin doing." - Walt Disney
-            </p>
-        </footer>
     </div>
 
     <script src="welcome.js"></script>

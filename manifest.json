@@ -27,6 +27,12 @@
     "service_worker": "background_complete.js"
   },
   
+  "web_accessible_resources": [
+    {
+      "resources": ["welcome.html", "welcome.css", "welcome.js", "test-simple.html"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   
   "action": {
     "default_popup": "popup.html",

@@ -68,11 +68,11 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === 'morningCleanup') {
     console.log('Morning cleanup alarm triggered');
     
-    // Check if we should open the welcome tab
-    await checkAndOpenWelcomeTab();
+    // Perform the scheduled cleanup FIRST
+    await cleanupTabs(false, 'scheduled');
     
-    // Perform the scheduled cleanup
-    cleanupTabs(false, 'scheduled');
+    // THEN open the welcome tab (so it shows correct archived data)
+    await checkAndOpenWelcomeTab();
   }
 });
 
@@ -137,34 +137,65 @@ async function scheduleNextCleanup(archiveTime) {
 }
 
 /**
- * Check if we should open the welcome tab today
+ * Enhanced debug version - Check if we should open the welcome tab today
  */
 async function checkAndOpenWelcomeTab() {
+  console.log('🔍 [DEBUG] checkAndOpenWelcomeTab() called');
+  
   try {
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    const now = new Date();
+    const today = now.toISOString().split('T')[0]; // YYYY-MM-DD format
+    const todayReadable = now.toLocaleDateString();
+    
+    console.log(`🔍 [DEBUG] Today's date: ${today} (${todayReadable})`);
     
     // Check if we already opened the welcome tab today
     const result = await chrome.storage.local.get(['lastWelcomeDate']);
     const lastWelcomeDate = result.lastWelcomeDate;
     
+    console.log(`🔍 [DEBUG] Stored lastWelcomeDate: "${lastWelcomeDate}"`);
+    console.log(`🔍 [DEBUG] Today's date: "${today}"`);
+    console.log(`🔍 [DEBUG] Dates match: ${lastWelcomeDate === today}`);
+    
     if (lastWelcomeDate === today) {
-      console.log('Welcome tab already opened today, skipping');
-      return;
+      console.log('⏭️ [DEBUG] Welcome tab already opened today, skipping');
+      return false; // Return false to indicate no tab was opened
     }
     
-    // Open the welcome tab
-    console.log('Opening welcome tab for first cleanup of the day');
-    await chrome.tabs.create({ 
-      url: chrome.runtime.getURL('welcome.html'),
+    // Test chrome.runtime.getURL first
+    const welcomeUrl = chrome.runtime.getURL('welcome.html');
+    console.log(`🔍 [DEBUG] Welcome URL: ${welcomeUrl}`);
+    
+    // Test if we can create tabs at all
+    console.log('🔍 [DEBUG] Attempting to create welcome tab...');
+    
+    const tab = await chrome.tabs.create({ 
+      url: welcomeUrl,
       active: true 
     });
     
-    // Save today's date
+    console.log(`✅ [DEBUG] Welcome tab created successfully:`, tab);
+    
+    // Wait a moment and check if tab still exists
+    setTimeout(async () => {
+      const checkTabs = await chrome.tabs.query({});
+      const stillExists = checkTabs.find(t => t.id === tab.id);
+      console.log(`🔍 [DEBUG] Welcome tab still exists after 100ms: ${!!stillExists}`);
+      if (!stillExists) {
+        console.log(`❌ [DEBUG] Welcome tab disappeared! Current tabs:`, checkTabs.map(t => `${t.id}: ${t.title} (${t.url})`));
+      }
+    }, 100);
+    
+    // Save today's date AFTER successful tab creation
     await chrome.storage.local.set({ lastWelcomeDate: today });
-    console.log(`Welcome tab opened and date saved: ${today}`);
+    console.log(`✅ [DEBUG] Date saved to storage: ${today}`);
+    
+    return true; // Return true to indicate tab was opened
     
   } catch (error) {
-    console.error('Error checking/opening welcome tab:', error);
+    console.error('❌ [DEBUG] Error in checkAndOpenWelcomeTab:', error);
+    console.error('❌ [DEBUG] Error stack:', error.stack);
+    return false;
   }
 }
 
@@ -181,9 +212,13 @@ async function cleanupTabs(isManual = false, source = 'manual') {
       return;
     }
     
-    // Separate pinned and unpinned tabs
+    // Separate pinned and unpinned tabs, but exclude welcome tab from cleanup
+    const welcomeUrl = chrome.runtime.getURL('welcome.html');
     const pinnedTabs = tabs.filter(tab => tab.pinned);
-    const unpinnedTabs = tabs.filter(tab => !tab.pinned);
+    const unpinnedTabs = tabs.filter(tab => !tab.pinned && tab.url !== welcomeUrl);
+    
+    console.log(`🔍 [CLEANUP] Welcome URL: ${welcomeUrl}`);
+    console.log(`🔍 [CLEANUP] Total tabs: ${tabs.length}, Pinned: ${pinnedTabs.length}, Unpinned (excluding welcome): ${unpinnedTabs.length}`);
     
     if (unpinnedTabs.length === 0) {
       console.log('No unpinned tabs to archive - all tabs are pinned');
@@ -216,7 +251,15 @@ async function cleanupTabs(isManual = false, source = 'manual') {
     
     // Close unpinned tabs
     const unpinnedTabIds = unpinnedTabs.map(tab => tab.id);
-    await chrome.tabs.remove(unpinnedTabIds);
+    console.log(`🔍 [CLEANUP] Closing tab IDs: ${unpinnedTabIds.join(', ')}`);
+    console.log(`🔍 [CLEANUP] Tabs being closed:`, unpinnedTabs.map(t => `${t.id}: ${t.title} (${t.url})`));
+    
+    if (unpinnedTabIds.length > 0) {
+      await chrome.tabs.remove(unpinnedTabIds);
+      console.log(`✅ [CLEANUP] Closed ${unpinnedTabIds.length} tabs`);
+    } else {
+      console.log(`ℹ️ [CLEANUP] No tabs to close`);
+    }
     
     // Show toast notification
     await showToast(getWarmMessage(unpinnedTabs.length));
@@ -365,5 +408,134 @@ async function cleanupOldArchives() {
 
 // Test function
 globalThis.testToast = () => showToast('Test message from Fresh Tabs!');
+
+// 🧪 DEV MODE - Test scheduled cleanup simulation
+const DEV_MODE = true; // Set to false for production
+
+if (DEV_MODE) {
+  console.log('🧪 [DEV] Development mode enabled');
+  
+  // Function to simulate scheduled cleanup
+  globalThis.simulateScheduledCleanup = async function() {
+    console.log('🧪 [DEV] Simulating scheduled cleanup alarm...');
+    
+    // Clear lastWelcomeDate to force welcome tab opening
+    await chrome.storage.local.remove(['lastWelcomeDate']);
+    console.log('🧪 [DEV] Cleared lastWelcomeDate for testing');
+    
+    // Run the cleanup FIRST
+    await cleanupTabs(false, 'scheduled');
+    console.log(`🧪 [DEV] Cleanup completed, now opening welcome tab...`);
+    
+    // THEN open the welcome tab (so it shows the correct archived data)
+    const result = await checkAndOpenWelcomeTab();
+    console.log(`🧪 [DEV] Welcome tab opened: ${result}`);
+    
+    // Check if welcome tab exists after cleanup
+    tabs = await chrome.tabs.query({});
+    welcomeTab = tabs.find(t => t.url === welcomeUrl);
+    console.log(`🧪 [DEV] Welcome tab after cleanup: ${welcomeTab ? `Found (ID: ${welcomeTab.id})` : 'NOT FOUND'}`);
+    
+    console.log('🧪 [DEV] Scheduled cleanup completed');
+  };
+  
+  // Function to check current storage state
+  globalThis.debugWelcomeStorage = async function() {
+    const storage = await chrome.storage.local.get(['lastWelcomeDate']);
+    const today = new Date().toISOString().split('T')[0];
+    
+    console.log('🔍 [DEV] Current storage state:');
+    console.log(`  - lastWelcomeDate: "${storage.lastWelcomeDate}"`);
+    console.log(`  - Today's date: "${today}"`);
+    console.log(`  - Would open tab: ${storage.lastWelcomeDate !== today}`);
+  };
+  
+  // Function to reset welcome tab state
+  globalThis.resetWelcomeState = async function() {
+    await chrome.storage.local.remove(['lastWelcomeDate']);
+    console.log('🧪 [DEV] Welcome state reset - next cleanup will open welcome tab');
+  };
+  
+  // Function to test tab creation directly
+  globalThis.testWelcomeTabCreation = async function() {
+    console.log('🧪 [DEV] Testing welcome tab creation directly...');
+    try {
+      const welcomeUrl = chrome.runtime.getURL('welcome.html');
+      console.log(`🔍 [DEV] Welcome URL: ${welcomeUrl}`);
+      
+      const tab = await chrome.tabs.create({ 
+        url: welcomeUrl, 
+        active: true 
+      });
+      console.log('✅ [DEV] Tab created successfully:', tab);
+    } catch (error) {
+      console.error('❌ [DEV] Tab creation failed:', error);
+      console.error('❌ [DEV] Error details:', error.message);
+    }
+  };
+  
+  // Comprehensive diagnostic function
+  globalThis.fullWelcomeDiagnostic = async function() {
+    console.log('🏥 [DIAGNOSTIC] Running full welcome tab diagnostic...');
+    
+    // Test 1: Basic extension APIs
+    console.log('\n1️⃣ Testing basic extension APIs:');
+    console.log('chrome.runtime exists:', !!chrome.runtime);
+    console.log('chrome.tabs exists:', !!chrome.tabs);
+    console.log('chrome.storage exists:', !!chrome.storage);
+    
+    // Test 2: URL generation
+    console.log('\n2️⃣ Testing URL generation:');
+    try {
+      const welcomeUrl = chrome.runtime.getURL('welcome.html');
+      console.log('Welcome URL:', welcomeUrl);
+      console.log('URL type:', typeof welcomeUrl);
+      console.log('URL length:', welcomeUrl?.length);
+    } catch (error) {
+      console.error('URL generation failed:', error);
+    }
+    
+    // Test 3: Storage state
+    console.log('\n3️⃣ Checking storage state:');
+    try {
+      const storage = await chrome.storage.local.get(['lastWelcomeDate']);
+      const today = new Date().toISOString().split('T')[0];
+      console.log('Storage result:', storage);
+      console.log('Today:', today);
+      console.log('Comparison:', storage.lastWelcomeDate === today);
+    } catch (error) {
+      console.error('Storage check failed:', error);
+    }
+    
+    // Test 4: Basic tab creation
+    console.log('\n4️⃣ Testing basic tab creation:');
+    try {
+      const basicTab = await chrome.tabs.create({url: 'about:blank'});
+      console.log('Basic tab created:', basicTab.id);
+      // Close it immediately
+      await chrome.tabs.remove(basicTab.id);
+      console.log('Basic tab closed');
+    } catch (error) {
+      console.error('Basic tab creation failed:', error);
+    }
+    
+    // Test 5: Extension tab creation
+    console.log('\n5️⃣ Testing extension tab creation:');
+    try {
+      const welcomeUrl = chrome.runtime.getURL('welcome.html');
+      const extTab = await chrome.tabs.create({url: welcomeUrl, active: false});
+      console.log('Extension tab created:', extTab.id);
+      console.log('Extension tab URL:', extTab.url);
+      console.log('Extension tab status:', extTab.status);
+      // Don't close it so you can see if it loads
+    } catch (error) {
+      console.error('Extension tab creation failed:', error);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
+    
+    console.log('\n✅ Diagnostic complete!');
+  };
+}
 
 console.log('✅ Fresh Tabs loaded successfully');
