@@ -12,7 +12,8 @@
   - Scrollable list of archived tabs  
   - Optional “Today’s Focus” input  
   - Rotating inspirational quote  
-  - Accessible Settings icon  
+  - Accessible Settings icon 
+  
 ✅ Manual "Archive & Refresh Now" button in the popup  
 ✅ Preserves pinned tabs — they remain open  
 ✅ Search & view archived tabs by date & title  
