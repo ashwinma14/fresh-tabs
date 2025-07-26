@@ -4,7 +4,6 @@
 
 ---
 
-## ✨ Features
 ## ✨ Features  
 ✅ Automatically archives & closes unpinned tabs daily at your chosen time  
 ✅ Opens a beautiful **Welcome Tab** each morning with:  
