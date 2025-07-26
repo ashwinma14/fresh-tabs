@@ -43,6 +43,13 @@ personal/
 dev/
 scripts/
 
+# Ignore local-only dev/test tools
+mcp.config.ts
+playwright.config.ts
+extensionTestSetup.ts
+README-MCP.md
+tests/
+
 # Backup Files
 *.bak
 *.backup
